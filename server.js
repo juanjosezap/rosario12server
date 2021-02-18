@@ -3,9 +3,11 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 
 const app = express();
+const dotenv = require('dotenv');
+dotenv.config();
 
 var corsOptions = {
-  origin: "https://rosario12pauta.herokuapp.com"
+  origin: process.env.CORS_OPTIONS
 };
 
 app.use(cors(corsOptions));
