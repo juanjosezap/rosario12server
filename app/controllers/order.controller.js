@@ -167,11 +167,8 @@ exports.getPauta = (req, res) => {
   }
 
   const dateFilter = new Date(req.query.date);
-  let pagina = 2;
-  //{ 'avisos.pagina': pagina }
-  Order.find()
+  Order.find({ 'avisos': { $elemMatch: { 'fecha': dateFilter } }})
     .populate('avisos')
-    .execPopulate()
     .then(data => {
       res.send(data);
     })
