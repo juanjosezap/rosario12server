@@ -16,6 +16,7 @@ exports.create = (req, res) => {
             if (!err && maxResult.length) {
                 maxObj = maxResult[0].nro;
             }
+            
             // Create a Order
             const order = new Order({
                 nombre: req.body.nombre,

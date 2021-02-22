@@ -11,7 +11,6 @@ db.clients = require("./client.model");
 db.user = require("./user.model");
 db.role = require("./role.model");
 db.order = require("./order.model");
-db.aviso = require("./aviso.model");
 
 db.ROLES = ["user", "admin", "moderator"];
 

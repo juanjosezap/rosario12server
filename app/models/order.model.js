@@ -1,8 +1,11 @@
 const mongoose = require("mongoose");
 
-const Order = mongoose.model(
-  "order",
-  new mongoose.Schema({
+const Aviso = new mongoose.Schema({
+  fecha: Date,
+  pagina: Number
+})
+
+const Order = new mongoose.Schema({
     nombre: String,
     nro: Number,
     col: Number,
@@ -14,15 +17,9 @@ const Order = mongoose.model(
     tarifa: Number,
     notas: String,
     color: Boolean,
-    avisos: [
-      {
-        type: mongoose.SchemaTypes.ObjectId,
-        ref: 'Aviso'
-      }
-    ]
+    avisos: [Aviso]
   },
   { timestamps: true }
-  )
-);
+  );
 
-module.exports = Order;
+module.exports = mongoose.model("order", Order);
