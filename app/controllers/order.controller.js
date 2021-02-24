@@ -26,6 +26,7 @@ exports.create = (req, res) => {
                 tarifa: req.body.tarifa,
                 notas: req.body.notas,
                 color: req.body.color,
+                medio: req.body.medio,
                 avisos: req.body.avisos,
                 client: req.body.client
             });

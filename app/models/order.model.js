@@ -17,6 +17,7 @@ const Order = new mongoose.Schema({
     tarifa: Number,
     notas: String,
     color: Boolean,
+    medio: String,
     avisos: [Aviso]
   },
   { timestamps: true }
