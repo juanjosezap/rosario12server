@@ -67,6 +67,7 @@ exports.findOne = (req, res) => {
   const id = req.params.id;
 
   Order.findById(id)
+    .populate('client')
     .then(data => {
       if (!data)
         res.status(404).send({ message: "Not found Order with id " + id });
@@ -169,6 +170,7 @@ exports.getPauta = (req, res) => {
   const dateFilter = new Date(req.query.date);
   Order.find({ 'avisos': { $elemMatch: { 'fecha': dateFilter } }})
     .populate('avisos')
+    .populate('client')
     .then(data => {
       res.send(data);
     })
