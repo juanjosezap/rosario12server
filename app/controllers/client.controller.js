@@ -16,7 +16,8 @@ exports.create = (req, res) => {
     sujetoExento: req.body.sujetoExento ? req.body.sujetoExento : false,
     dir: req.body.dir,
     tel: req.body.tel,
-    mail: req.body.mail
+    mail: req.body.mail,
+    responsableInscripto: req.body.responsableInscripto ? req.body.responsableInscripto : false
   });
 
   // Save Client in the database

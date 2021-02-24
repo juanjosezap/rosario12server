@@ -8,7 +8,8 @@ const Client = mongoose.model(
         sujetoExento: Boolean,
         dir: String,
         tel: String,
-        mail: String
+        mail: String,
+        responsableInscripto: Boolean
     },
     { timestamps: true }
     )
