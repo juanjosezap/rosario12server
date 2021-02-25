@@ -5,11 +5,10 @@ const Client = mongoose.model(
     new mongoose.Schema({
         nombre: String,
         cuit: String,
-        sujetoExento: Boolean,
         dir: String,
         tel: String,
         mail: String,
-        responsableInscripto: Boolean
+        iva: String
     },
     { timestamps: true }
     )

@@ -1,6 +1,9 @@
 const db = require("../models");
 const Order = db.order;
 const Aviso = db.aviso;
+const orderPdf = require("../pdf/order");
+const pautaPdf = require("../pdf/pauta");
+const PDFDocument = require("pdfkit");
 // Create and Save a new Order
 exports.create = (req, res) => {
   // Validate request
@@ -180,4 +183,59 @@ exports.getPauta = (req, res) => {
         message: err.message || "Some error occurred while retrieving orders."
       });
     });
+};
+
+exports.getOrderPdf = async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    Order.findById(id)
+      .populate('client')
+      .then(data => {
+        
+        const doc = orderPdf(data);
+        
+        res.setHeader("Content-disposition", `attachment; filename=ORD${data.nro}.pdf`);
+        res.setHeader("Content-type", "application/pdf");
+        return doc.pipe(res);
+      })
+      .catch(err => {
+        res
+          .status(500)
+          .send({ message: "Error retrieving Order with id=" + id });
+      });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({error: "Could not generate Order report"});
+  }
+};
+
+exports.getPautaPdf = async (req, res) => {
+  if (!req.query.date) {
+    return res.status(400).send({
+      message: "Data can not be empty!"
+    });
+  }
+  try {
+    const dateFilter = new Date(req.query.date);
+    Order.find({ 'avisos': { $elemMatch: { 'fecha': dateFilter } }})
+      .populate('avisos')
+      .populate('client')
+      .then(data => {
+        const doc = pautaPdf(data, dateFilter);
+        const fecha = (dateFilter.getDate() + 1)  + '-' + (dateFilter.getMonth() + 1).toString().padStart(2, '0') + '-' +  dateFilter.getFullYear();
+        res.setHeader("Content-disposition", `attachment; filename=PAUTA${fecha}.pdf`);
+        res.setHeader("Content-type", "application/pdf");
+        return doc.pipe(res);
+      })
+      .catch(err => {
+        res.status(500).send({
+          message: err.message || "Some error occurred while retrieving orders."
+        });
+      });
+  } catch (error) {
+    res.status(500).send({
+      message: err.message || "Some error occurred. Comela."
+    });
+  }
 };
