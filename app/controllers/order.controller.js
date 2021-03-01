@@ -175,6 +175,7 @@ exports.getPauta = (req, res) => {
   Order.find({ 'avisos': { $elemMatch: { 'fecha': dateFilter } }})
     .populate('avisos')
     .populate('client')
+    .sort({medio: -1, 'avisos.pagina': 1, nro: 1 })
     .then(data => {
       res.send(data);
     })
@@ -221,6 +222,7 @@ exports.getPautaPdf = async (req, res) => {
     Order.find({ 'avisos': { $elemMatch: { 'fecha': dateFilter } }})
       .populate('avisos')
       .populate('client')
+      .sort({medio: -1, 'avisos.pagina': 1, nro: 1 })
       .then(data => {
         const doc = pautaPdf(data, dateFilter);
         const fecha = (dateFilter.getDate() + 1)  + '-' + (dateFilter.getMonth() + 1).toString().padStart(2, '0') + '-' +  dateFilter.getFullYear();

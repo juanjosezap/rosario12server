@@ -4,31 +4,49 @@ module.exports = (data, date) => {
     const doc = new PDFDocument();
     daysOfWeek = ["DOMINGO", "LUNES", "MARTES", "MIERCOLES", "JUEVES", "VIERNES", "SABADO"]
 
-    doc.image("app/assets/pagina-12.jpg", 70, 60, {width: 100});
+    doc.image("app/assets/pagina-12.jpg", 50, 60, {width: 100});
 
     doc.text("AGENCIA OFICIAL  PAGINA/12  ROSARIO/12", { align: 'right'});
     doc.moveDown(1);
-    const dia = daysOfWeek[date.getDay()];
+    const dia = daysOfWeek[date.getDay()+1];
     const fecha = (date.getDate() + 1)  + '/' + (date.getMonth() + 1).toString().padStart(2, '0') + '/' +  date.getFullYear();
-    doc.text(`LISTADO CONFIRMACION AVISOS para ${dia} ${fecha}`);
+    doc.text(`LISTADO CONFIRMACION AVISOS para ${dia} ${fecha}`, (x = 50));
     doc.moveDown(1);
+    var page = -1;
+    var edicionNacional = false;
     let yPos = doc.y;
-    doc .text("PAGINA", (x = 50), (y = yPos))
-        .text("MEDIDA", (x = 100), (y = yPos))
-        .text("SUPERFICIE", (x = 200), (y = yPos))
-        .text("DETALLE", (x = 280), (y = yPos))
-        .text("OBSERVACIONES", (x = 390), (y = yPos))
+    doc .text("MEDIDA", (x = 50), (y = yPos))
+        .text("SUPERFICIE", (x = 150), (y = yPos))
+        .text("DETALLE", (x = 230), (y = yPos))
+        .text("OBSERVACIONES", (x = 300), (y = yPos))
         .text("NRO.", (x = 510), (y = yPos));
-    doc.moveDown(1);
+    doc.moveDown(1)
+    .fontSize(10);
+    var paginaAviso = -1;
     data.map(orden => {
+        
+        orden.avisos.forEach(element => {
+          if(element.fecha.getDate() == date.getDate() && element.fecha.getMonth() == date.getMonth() && element.fecha.getFullYear() == date.getFullYear()) {
+            paginaAviso = element.pagina;
+          };
+        }); 
+        if (orden.medio == 'Pagina 12' && !edicionNacional) {
+          doc.text('UBICACION: EDICION NACIONAL', (x = 50));
+          doc.text("-----------------------------------------------");
+          doc.moveDown(1)
+          edicionNacional = true;
+        }else if (page !== paginaAviso && !edicionNacional) {
+          doc.text(`UBICACION: PAGINA ${paginaAviso}`, (x = 50) );
+          doc.text("-----------------------------------------------");
+          page = paginaAviso;
+          doc.moveDown(1);
+        };
         yPos = doc.y;
         doc
-          .fontSize(10)
-          .text(orden.avisos[0].pagina, (x = 50), (y = yPos))
-          .text(`${orden.col}  Col. x ${orden.alto} Cm.`, (x = 100), (y = yPos))
-          .text(`${orden.col * orden.alto}`, (x = 200), (y = yPos))
-          .text(`${orden.nombre}`, (x = 280), (y = yPos))
-          .text(`${orden.notas}`, (x = 390), (y = yPos))
+          .text(`${orden.col}  Col. x ${orden.alto} Cm.`, (x = 50), (y = yPos))
+          .text(`${orden.col * orden.alto}`, (x = 150), (y = yPos))
+          .text(`${orden.nombre}`, (x = 230), (y = yPos))
+          .text(`${orden.notas}`, (x = 300), (y = yPos))
           .text(`${orden.nro}`, (x = 510), (y = yPos));
         doc.moveDown(1);
       });
