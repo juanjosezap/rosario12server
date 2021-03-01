@@ -16,8 +16,8 @@ module.exports = (data, date) => {
     var edicionNacional = false;
     let yPos = doc.y;
     doc .text("MEDIDA", (x = 50), (y = yPos))
-        .text("SUPERFICIE", (x = 150), (y = yPos))
-        .text("DETALLE", (x = 230), (y = yPos))
+        .text("SUP.", (x = 130), (y = yPos))
+        .text("DETALLE", (x = 160), (y = yPos))
         .text("OBSERVACIONES", (x = 300), (y = yPos))
         .text("NRO.", (x = 510), (y = yPos));
     doc.moveDown(1)
@@ -42,10 +42,12 @@ module.exports = (data, date) => {
           doc.moveDown(1);
         };
         yPos = doc.y;
+        var nombre = orden.nombre.substring(0, 25);
+        if(orden.nombre.length > 25) nombre += "...";
         doc
           .text(`${orden.col}  Col. x ${orden.alto} Cm.`, (x = 50), (y = yPos))
-          .text(`${orden.col * orden.alto}`, (x = 150), (y = yPos))
-          .text(`${orden.nombre}`, (x = 230), (y = yPos))
+          .text(`${orden.col * orden.alto}`, (x = 130), (y = yPos))
+          .text(`${nombre}`, (x = 160), (y = yPos))
           .text(`${orden.notas}`, (x = 300), (y = yPos))
           .text(`${orden.nro}`, (x = 510), (y = yPos));
         doc.moveDown(1);
