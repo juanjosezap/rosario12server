@@ -18,7 +18,15 @@ const Order = new mongoose.Schema({
     notas: String,
     color: Boolean,
     medio: String,
-    avisos: [Aviso]
+    avisos: [Aviso],
+    createdBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+    },
+    updatedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+    }
   },
   { timestamps: true }
   );

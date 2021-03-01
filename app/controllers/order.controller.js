@@ -31,7 +31,9 @@ exports.create = (req, res) => {
                 color: req.body.color,
                 medio: req.body.medio,
                 avisos: req.body.avisos,
-                client: req.body.client
+                client: req.body.client,
+                createdBy: req.body.createdBy,
+                updatedBy: req.body.createdBy
             });
 
             // Save Order in the database
@@ -175,6 +177,8 @@ exports.getPauta = (req, res) => {
   Order.find({ 'avisos': { $elemMatch: { 'fecha': dateFilter } }})
     .populate('avisos')
     .populate('client')
+    .populate('createdBy')
+    .populate('updatedBy')
     .sort({medio: -1, 'avisos.pagina': 1, nro: 1 })
     .then(data => {
       res.send(data);
