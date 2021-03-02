@@ -4,6 +4,7 @@ module.exports = (data, date) => {
     const doc = new PDFDocument();
     daysOfWeek = ["DOMINGO", "LUNES", "MARTES", "MIERCOLES", "JUEVES", "VIERNES", "SABADO"]
     const breakPointNombre = 35;
+    const breakPointNota = 22;
     doc.image("app/assets/pagina-12.jpg", 50, 60, {width: 100});
 
     doc.text("AGENCIA OFICIAL  PAGINA/12  ROSARIO/12", { align: 'right'});
@@ -44,11 +45,13 @@ module.exports = (data, date) => {
         yPos = doc.y;
         var nombre = orden.nombre.substring(0, breakPointNombre);
         if(orden.nombre.length > breakPointNombre) nombre += "...";
+        var nota = orden.notas.substring(0, breakPointNota);
+        if(orden.notas.length > breakPointNota) nota += "...";
         doc
           .text(`${orden.col}  Col. x ${orden.alto} Cm.`, (x = 50), (y = yPos))
           .text(` ${orden.col * orden.alto}`, (x = 120), (y = yPos))
           .text(`${nombre}`, (x = 160), (y = yPos))
-          .text(`${orden.notas}`, (x = 350), (y = yPos))
+          .text(`${nota}`, (x = 350), (y = yPos))
           .text(`${orden.nro}`, (x = 510), (y = yPos));
         doc.moveDown(1);
       });
