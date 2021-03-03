@@ -245,3 +245,51 @@ exports.getPautaPdf = async (req, res) => {
     });
   }
 };
+
+exports.getOrders = (req, res) => {
+  const { nro, desde, hasta, nombre, medio, client } = req.query;
+  var query = {};
+  if ( nro !== "" ) {
+      query["nro"] = nro;
+  }
+  query["createdAt"] = {};
+  if (desde !== "") {
+    var desdeDate = new Date(new Date(desde));
+    desdeDate.setDate(desdeDate.getDate() + 1);
+    desdeDate.setHours(00, 00, 00);
+    query["createdAt"].$gte = desdeDate; 
+  }
+  if (hasta !== "") {
+    var hastaDate = new Date(new Date(hasta));
+    hastaDate.setDate(hastaDate.getDate() + 1);
+    hastaDate.setHours(23, 59, 59);
+    query["createdAt"].$lt = hastaDate;
+  }
+  if (Object.keys(query["createdAt"]).length === 0) {
+    delete query.createdAt;
+  }    
+  if ( nombre !== "") {
+    query["nombre"] = { $regex: new RegExp(nombre), $options: "i" }
+  }
+  if ( medio !== "" ) {
+      query["medio"] = medio;
+  }
+  if ( client !== "") {
+    query["client"] =  client;
+  }
+
+  Order.find(query)
+    .populate('avisos')
+    .populate('client')
+    .populate('createdBy')
+    .populate('updatedBy')
+    .sort({ nro: -1 })
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send({
+        message: err.message || "Some error occurred while retrieving orders."
+      });
+    });
+};
