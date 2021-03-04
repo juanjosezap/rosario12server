@@ -278,6 +278,7 @@ exports.getOrders = (req, res) => {
     query["client"] =  client;
   }
 
+  
   Order.find(query)
     .populate('avisos')
     .populate('client')
