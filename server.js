@@ -10,6 +10,7 @@ var corsOptions = {
   origin: process.env.CORS_OPTIONS
 };
 
+
 app.use(cors(corsOptions));
 
 // parse requests of content-type - application/json
