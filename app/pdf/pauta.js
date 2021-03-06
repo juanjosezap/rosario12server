@@ -1,4 +1,5 @@
 const PDFDocument = require("pdfkit");
+const formatNumber = require('../utils/formatNumber');
 
 module.exports = (data, date) => {
     const doc = new PDFDocument();
@@ -49,7 +50,7 @@ module.exports = (data, date) => {
         if(orden.notas.length > breakPointNota) nota += "...";
         doc
           .text(`${orden.col}  Col. x ${orden.alto} Cm.`, (x = 50), (y = yPos))
-          .text(` ${orden.col * orden.alto}`, (x = 120), (y = yPos))
+          .text(` ${formatNumber(orden.col * orden.alto)}`, (x = 120), (y = yPos))
           .text(`${nombre}`, (x = 160), (y = yPos))
           .text(`${nota}`, (x = 350), (y = yPos))
           .text(`${orden.nro}`, (x = 510), (y = yPos));

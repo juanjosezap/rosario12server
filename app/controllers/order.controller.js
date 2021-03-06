@@ -255,7 +255,7 @@ exports.getOrders = (req, res) => {
   query["createdAt"] = {};
   if (desde !== "") {
     var desdeDate = new Date(new Date(desde));
-    desdeDate.setDate(desdeDate.getDate() + 1);
+    desdeDate.setDate(desdeDate.getDate());
     desdeDate.setHours(00, 00, 00);
     query["createdAt"].$gte = desdeDate; 
   }
