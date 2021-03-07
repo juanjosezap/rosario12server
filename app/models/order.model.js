@@ -2,7 +2,8 @@ const mongoose = require("mongoose");
 
 const Aviso = new mongoose.Schema({
   fecha: Date,
-  pagina: Number
+  pagina: Number,
+  nombre: String
 })
 
 const Order = new mongoose.Schema({

@@ -27,9 +27,11 @@ module.exports = (data, date) => {
     var paginaAviso = -1;
     data.map(orden => {
         
+        var nombreOrdenAlternativo = '';
         orden.avisos.forEach(element => {
           if(element.fecha.getDate() == date.getDate() && element.fecha.getMonth() == date.getMonth() && element.fecha.getFullYear() == date.getFullYear()) {
             paginaAviso = element.pagina;
+            nombreOrdenAlternativo = element.nombre ?? "";
           };
         }); 
         if (orden.medio == 'Pagina 12' && !edicionNacional) {
@@ -44,8 +46,9 @@ module.exports = (data, date) => {
           doc.moveDown(1);
         };
         yPos = doc.y;
-        var nombre = orden.nombre.substring(0, breakPointNombre);
-        if(orden.nombre.length > breakPointNombre) nombre += "...";
+        var nombre = nombreOrdenAlternativo.length > 0 ? nombreOrdenAlternativo : orden.nombre;
+        nombre = nombre.substring(0, breakPointNombre);
+        if(nombre.length > breakPointNombre) nombre += "...";
         var nota = orden.notas.substring(0, breakPointNota);
         if(orden.notas.length > breakPointNota) nota += "...";
         doc
