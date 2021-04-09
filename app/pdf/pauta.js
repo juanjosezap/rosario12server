@@ -1,4 +1,5 @@
 const PDFDocument = require("pdfkit");
+const { order } = require("../models");
 const formatNumber = require('../utils/formatNumber');
 
 module.exports = (data, date) => {
@@ -25,6 +26,7 @@ module.exports = (data, date) => {
     doc.moveDown(1)
     .fontSize(10);
     var paginaAviso = -1;
+    var orderslist = [];
     data.map(orden => {
         
         var nombreOrdenAlternativo = '';
@@ -34,31 +36,46 @@ module.exports = (data, date) => {
             nombreOrdenAlternativo = element.nombre ?? "";
           };
         }); 
-        if (orden.medio == 'Pagina 12' && !edicionNacional) {
-          doc.text('UBICACION: EDICION NACIONAL', (x = 50));
-          doc.text("-----------------------------------------------");
-          doc.moveDown(1)
-          edicionNacional = true;
-        }else if (page !== paginaAviso && !edicionNacional) {
-          doc.text(`UBICACION: PAGINA ${paginaAviso}`, (x = 50) );
-          doc.text("-----------------------------------------------");
-          page = paginaAviso;
-          doc.moveDown(1);
-        };
-        yPos = doc.y;
+        
         var nombre = nombreOrdenAlternativo.length > 0 ? nombreOrdenAlternativo : orden.nombre;
         nombre = nombre.substring(0, breakPointNombre);
         if(nombre.length > breakPointNombre) nombre += "...";
         var nota = orden.notas.substring(0, breakPointNota);
         if(orden.notas.length > breakPointNota) nota += "...";
-        doc
+        
+        orderslist.push({
+          nombre: nombre,
+          notas: nota,
+          medio: orden.medio,
+          paginaAviso: paginaAviso,
+          col: orden.col,
+          alto: orden.alto,
+          nro: orden.nro,
+        });
+      });
+
+    orderslist.sort((a, b) => b.medio.localeCompare(a.medio) || a.paginaAviso - b.paginaAviso).map(orden => {
+      if (orden.medio == 'Pagina 12' && !edicionNacional) {
+        doc.text('UBICACION: EDICION NACIONAL', (x = 50));
+        doc.text("-----------------------------------------------");
+        doc.moveDown(1)
+        edicionNacional = true;
+      }else if (page !== orden.paginaAviso && !edicionNacional) {
+        doc.text(`UBICACION: PAGINA ${orden.paginaAviso}`, (x = 50) );
+        doc.text("-----------------------------------------------");
+        page = orden.paginaAviso;
+        doc.moveDown(1);
+      };
+
+      yPos = doc.y;
+      doc
           .text(`${orden.col}  Col. x ${orden.alto} Cm.`, (x = 50), (y = yPos))
           .text(` ${formatNumber(orden.col * orden.alto)}`, (x = 120), (y = yPos))
-          .text(`${nombre}`, (x = 160), (y = yPos))
-          .text(`${nota}`, (x = 350), (y = yPos))
+          .text(`${orden.nombre}`, (x = 160), (y = yPos))
+          .text(`${orden.notas}`, (x = 350), (y = yPos))
           .text(`${orden.nro}`, (x = 510), (y = yPos));
         doc.moveDown(1);
-      });
+    });
 
     doc.end();
 
